@@ -23,7 +23,7 @@ export class TodosController {
   }
 
   @Post()
-  create(@Body() createTodoInput: CreateTodoInput) {
+  create(@Body(new ValidationPipe()) createTodoInput: CreateTodoInput) {
     return this.todosService.createTodo(createTodoInput);
   }
 
@@ -34,8 +34,8 @@ export class TodosController {
 
   @Patch(':id')
   update(
-    @Param('id', ParseObjectIdPipe) @Body(new ValidationPipe()) id: string,
-    updateTodoInput: UpdateTodoInput,
+    @Param('id', ParseObjectIdPipe) id: string,
+    @Body(new ValidationPipe()) updateTodoInput: UpdateTodoInput,
   ) {
     return this.todosService.updateTodo(id, updateTodoInput);
   }

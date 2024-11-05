@@ -12,5 +12,6 @@ export class ParseObjectIdPipe implements PipeTransform<string> {
     if (!isValidObjectId(value)) {
       throw new BadRequestException(`Invalid ID format`);
     }
+    return value;
   }
 }

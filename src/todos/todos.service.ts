@@ -10,7 +10,7 @@ export class TodosService {
   constructor(@InjectModel(Todo.name) private todoModel: Model<Todo>) {}
 
   async getAll() {
-    const todos = await this.todoModel.find({}, 'title description');
+    const todos = await this.todoModel.find({}, 'title description completed');
 
     if (!todos) throw new NotFoundException('No todos found');
 
