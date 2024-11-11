@@ -5,10 +5,8 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { Todo, TodoSchema } from './schemas/todo.schema';
 
 @Module({
-  controllers: [TodosController],
-  providers: [TodosService],
-  imports: [
-    MongooseModule.forFeature([{ name: Todo.name, schema: TodoSchema }]),
-  ],
+   controllers: [TodosController],
+   providers: [TodosService],
+   imports: [MongooseModule.forFeature([{ name: Todo.name, schema: TodoSchema }])],
 })
 export class TodosModule {}
