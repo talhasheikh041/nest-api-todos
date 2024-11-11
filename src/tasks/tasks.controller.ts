@@ -15,7 +15,7 @@ export class TasksController {
 
    @Post()
    create(@Body(new ValidationPipe()) createTaskDTO: CreateTaskDTO) {
-      return this.tasksService.createTodo(createTaskDTO);
+      return this.tasksService.createTask(createTaskDTO);
    }
 
    @Get(':id')
@@ -28,11 +28,11 @@ export class TasksController {
       @Param('id', ParseObjectIdPipe) id: string,
       @Body(new ValidationPipe()) updateTaskDTO: UpdateTaskDTO,
    ) {
-      return this.tasksService.updateTodo(id, updateTaskDTO);
+      return this.tasksService.updateTask(id, updateTaskDTO);
    }
 
    @Delete(':id')
    remove(@Param('id', ParseObjectIdPipe) id: string) {
-      return this.tasksService.deleteTodo(id);
+      return this.tasksService.deleteTask(id);
    }
 }

@@ -1,8 +1,10 @@
 import { HttpStatus } from '@nestjs/common';
 
-export const createResponse = (status: HttpStatus, result: any) => {
+export const createResponse = (statusCode: HttpStatus, message?: string, result: any = {}) => {
    return {
-      status,
+      status: statusCode >= 200 && statusCode <= 299 ? 'success' : 'error',
+      statusCode,
+      message,
       result,
    };
 };

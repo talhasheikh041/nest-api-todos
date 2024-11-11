@@ -1,15 +1,16 @@
 import {
+   BadRequestException,
    HttpStatus,
    Injectable,
    InternalServerErrorException,
    NotFoundException,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Task } from './schemas/task.schema';
 import { Model } from 'mongoose';
+import { createResponse } from 'src/common/utils/create-response.util';
 import { CreateTaskDTO } from './dto/create-task.dto';
 import { UpdateTaskDTO } from './dto/update-task.dto';
-import { createResponse } from 'src/common/utils/create-response.util';
+import { Task } from './schemas/task.schema';
 
 @Injectable()
 export class TasksService {
@@ -17,56 +18,53 @@ export class TasksService {
 
    async getAll() {
       try {
-         const todos = await this.taskModel.find({}, 'title description completed');
-         if (!todos) throw new NotFoundException('No todos found');
+         const tasks = await this.taskModel.find({}, 'title description completed');
+         if (!tasks) throw new NotFoundException('No tasks found');
 
-         return createResponse(HttpStatus.OK, todos);
-      } catch (error) {
-         throw new InternalServerErrorException(error.message);
-      }
-   }
-
-   async createTodo(createTaskDTO: CreateTaskDTO): Promise<Task> {
-      try {
-         const createdTodo = await this.taskModel.create(createTaskDTO);
-         return createdTodo;
+         return createResponse(HttpStatus.OK, undefined, tasks);
       } catch {
-         throw new InternalServerErrorException();
+         throw new InternalServerErrorException('Tasks not found');
       }
    }
 
-   async getOne(id: string): Promise<Task> {
+   async createTask(createTaskDTO: CreateTaskDTO): Promise<Task> {
       try {
-         const todo = this.taskModel.findById(id);
-         if (!todo) throw new NotFoundException(`ToDo with ID ${id} not found`);
-         return todo;
+         const createdTask = await this.taskModel.create(createTaskDTO);
+         return createdTask;
       } catch {
-         throw new InternalServerErrorException();
+         throw new BadRequestException('Task cannot be created');
       }
    }
 
-   async updateTodo(id: string, updateTaskDTO: UpdateTaskDTO): Promise<Task> {
+   async getOne(id: string) {
       try {
-         const updatedTodo = await this.taskModel.findByIdAndUpdate(id, updateTaskDTO, {
+         const task = this.taskModel.findById(id);
+         if (!task) throw new NotFoundException(`Task with ID ${id} not found`);
+         return createResponse(HttpStatus.OK, undefined, task);
+      } catch {
+         throw new BadRequestException('Task not found');
+      }
+   }
+
+   async updateTask(id: string, updateTaskDTO: UpdateTaskDTO) {
+      try {
+         const updatedTask = await this.taskModel.findByIdAndUpdate(id, updateTaskDTO, {
             new: true,
          });
-         if (!updatedTodo) throw new NotFoundException(`Todo with ID ${id} not found`);
-         return updatedTodo;
+
+         return createResponse(HttpStatus.OK, 'Task updated successfully', updatedTask);
       } catch {
-         throw new InternalServerErrorException();
+         throw new BadRequestException('Task cannot be updated');
       }
    }
 
-   async deleteTodo(id: string) {
+   async deleteTask(id: string) {
       try {
-         const deletedTodo = await this.taskModel.findByIdAndDelete(id);
-         if (!deletedTodo) {
-            throw new NotFoundException(`Todo with ID ${id} not found`);
-         }
+         await this.taskModel.findByIdAndDelete(id);
 
-         return 'Todo Deleted Successfully';
+         return createResponse(HttpStatus.OK, 'Task Deleted Successfully');
       } catch {
-         throw new InternalServerErrorException();
+         throw new BadRequestException('Task cannot be deleted');
       }
    }
 }
