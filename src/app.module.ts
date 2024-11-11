@@ -1,15 +1,15 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { TodosModule } from './todos/todos.module';
+import { TasksModule } from './tasks/tasks.module';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Connection } from 'mongoose';
 
 @Module({
    imports: [
-      TodosModule,
+      TasksModule,
       MongooseModule.forRoot('mongodb://localhost:27017', {
-         dbName: 'todos',
+         dbName: 'tasks-db',
          onConnectionCreate: (connection: Connection) => {
             connection.on('connected', () => console.log(`DB connected on ${connection.host}`));
          },

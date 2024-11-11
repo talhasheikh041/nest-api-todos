@@ -1,6 +1,6 @@
 import { IsString, IsNotEmpty, IsOptional, IsBoolean } from 'class-validator';
 
-export class CreateTodoInput {
+export class CreateTaskDTO {
    @IsString()
    @IsNotEmpty()
    title: string;
