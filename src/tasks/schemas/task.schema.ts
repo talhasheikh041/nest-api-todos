@@ -15,7 +15,7 @@ export class Task {
    assignedUsers: Types.ObjectId[];
 
    @Prop({
-      type: [{ _id: false, key: String, url: String }],
+      type: [{ key: String, url: String }],
       default: [],
    })
    attachments: { key: string; url: string }[];
@@ -23,7 +23,10 @@ export class Task {
    @Prop({ default: false })
    completed: boolean;
 
-   @Prop({ default: Date.now })
+   @Prop({ type: [{ type: Types.ObjectId, ref: 'Subtask' }] })
+   subtasks: Types.ObjectId[];
+
+   @Prop({ type: Date, default: Date.now })
    createdAt: Date;
 
    @Prop()
